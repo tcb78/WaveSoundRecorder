@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -21,6 +22,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -98,7 +100,22 @@ public class MainActivity extends Activity {
             file.mkdirs();
         }
 
-        return (file.getAbsolutePath() + "/" + System.currentTimeMillis() + AUDIO_RECORDER_FILE_EXT_WAV);
+        Calendar cal = Calendar.getInstance();
+        String year = String.valueOf(cal.get(Calendar.YEAR));
+        String month = String.format(Locale.US, "%02d", cal.get(Calendar.MONTH) + 1);
+        String date = String.format(Locale.US, "%02d", cal.get(Calendar.DATE));
+
+        File f;
+        int filenumber = 0;
+        String filename;
+        do {
+            filenumber++;
+            filename = year + month + date + "_" + String.format(Locale.US, "%04d", filenumber);
+            f = new File(filepath + "/" + AUDIO_RECORDER_FOLDER,
+                    filename + AUDIO_RECORDER_FILE_EXT_WAV);
+        } while(f.exists());
+
+        return (file.getAbsolutePath() + "/" + filename + AUDIO_RECORDER_FILE_EXT_WAV);
     }
 
     private String getTempFilename() {
@@ -190,8 +207,13 @@ public class MainActivity extends Activity {
             recordingThread = null;
         }
 
-        copyWaveFile(getTempFilename(), getFilename());
+        String tempFilename = getTempFilename();
+        String filename = getFilename();
+        copyWaveFile(tempFilename, filename);
         deleteTempFile();
+
+        Toast toast = Toast.makeText(this, filename, Toast.LENGTH_LONG);
+        toast.show();
     }
 
     private void deleteTempFile() {
