@@ -20,7 +20,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,7 +55,6 @@ public class MainActivity extends Activity {
         }
     };
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,12 +77,12 @@ public class MainActivity extends Activity {
     }
 
     private void setButtonHandlers() {
-        ((Button) findViewById(R.id.btnStart)).setOnClickListener(btnClick);
-        ((Button) findViewById(R.id.btnStop)).setOnClickListener(btnClick);
+        findViewById(R.id.btnStart).setOnClickListener(btnClick);
+        findViewById(R.id.btnStop).setOnClickListener(btnClick);
     }
 
     private void enableButton(int id, boolean isEnable) {
-        ((Button) findViewById(id)).setEnabled(isEnable);
+        findViewById(id).setEnabled(isEnable);
     }
 
     private void enableButtons(boolean isRecording) {
@@ -167,11 +165,10 @@ public class MainActivity extends Activity {
         try {
             os = new FileOutputStream(filename);
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        int read = 0;
+        int read;
 
         if (null != os) {
             while (isRecording) {
@@ -223,10 +220,10 @@ public class MainActivity extends Activity {
     }
 
     private void copyWaveFile(String inFilename, String outFilename) {
-        FileInputStream in = null;
-        FileOutputStream out = null;
-        long totalAudioLen = 0;
-        long totalDataLen = totalAudioLen + 36;
+        FileInputStream in;
+        FileOutputStream out;
+        long totalAudioLen;
+        long totalDataLen;
         long longSampleRate = RECORDER_SAMPLERATE;
         int channels = 1;
         long byteRate = RECORDER_BPP * RECORDER_SAMPLERATE * channels / 8;
